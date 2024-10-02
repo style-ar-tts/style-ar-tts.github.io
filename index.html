@@ -1,2 +1,192 @@
-<h1>Site under construction </h1>
-<h1>Site under construction </h1>
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Controllable TTS</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script src="helper.js" defer></script>
+  <style>
+    td {
+      vertical-align: middle;
+      min-width: 220px;
+    }
+
+    audio {
+      height: 50px;
+      width: 20vw;
+      min-width: 70px;
+      max-width: 220px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+    <div class="text-center">
+      <h2>Controllable Text-to-Speech Synthesis with Masked-Autoencoded <br> Style Representation</h2>
+      <p class="lead fw-bold">
+          <b class="btn border-white bg-white fw-bold"> Anonymous Author </b>
+      </p>
+      <p>
+      
+
+      </p>
+    </div>
+    <p>
+      <b>Abstract.</b>
+      Controllable text-to-speech (TTS) systems aim to manipulate various stylistic attributes of generated speech. Despite considerable research in this area, existing models that use natural language prompts as an interface often lack the ability for fine-grained control and face a scarcity of high-quality data. To address these challenges, we propose a two-stage language model for style-controllable TTS, utilizing a masked-autoencoded style representation as an intermediary. In our approach, we employ a masked autoencoder to learn a content-disentangled style feature of speech, which is then discretized using a residual vector quantizer. In the first stage, an autoregressive transformer is used for the conditional generation of these style tokens from text and control signals. In the second stage, we generate codec tokens from both text and sampled style tokens. Experiments demonstrate that training the first-stage model on extensive datasets enhances the robustness of the two-stage model in terms of quality and content accuracy. Additionally, our model achieves superior control over attributes such as pitch and emotion. By selectively combining discrete labels and speaker embeddings, we can fully control the speaker’s timbre and other stylistic information, or adjust attributes like pitch and emotion for a specified speaker. Audio samples are available at <a href="https://style-ar-tts.github.io">https://style-ar-tts.github.io</a>.
+    </p>
+  </div>
+
+  <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+    <h2 id="model-overview" style="text-align: center;">Model Overview</h2>
+    <div>
+      <p><br /></p>
+      <p style="text-align: center; margin-left: 5%;">
+        <img src="arch.png"  width="750" class="img-fluid">
+      </p>
+      <p><br /></p>
+    </div>
+    <p>
+      Our controllable TTS system consists of two major stages with a discrete style token as an intermediate representation. This style representation is from a transformer-based MAE as illustrated in figure (a), which learns to capture style information including speaker timbre, prosody, and acoustic environment in the speech with a mask-reconstruction paradigm. The style tokens of a speech clip can be extracted with the style encoder of the pre-trained MAE followed by a residual vector quantizer (RVQ) trained individually. The two stages of TTS are (1) <b>style token (ST) generation</b>, which generates style tokens conditioned on content phonemes and style controlling signals including discrete labels and / or continuous speaker embeddings; and (2) <b>codec token (CT) generation</b>, which generates codec tokens conditioned on content phonemes and style tokens, where the style tokens are either extracted from ground truth speech or predicted by the former stage. The generated codec tokens are then used to reconstruct the waveform with the codec decoder. Each of the two stages relies on a decoder-only transformer to conduct LM-style generation, as illustrated in figure (b). We provide details of these modules respectively in the following subsections.
+    </p>
+
+  </div>
+
+  <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
+    <h2 id="tablecontents" style="text-align: left;">Table of Contents</h2>
+    <div>
+        <li><a href="#reconstruct" class="btn border-white bg-white fw-bold">Reconstruct speech style from GT style tokens</a></li>
+        <li><a href="#label-ctrl" class="btn border-white bg-white fw-bold">Controllable TTS with discrete lables</a></li>
+        <li><a href="#emb-ctrl" class="btn border-white bg-white fw-bold">Controlling pitch and emotion with a reference speaker</a></li>
+        <li><a href="#bad-cases" class="btn border-white bg-white fw-bold">Bad cases with control signal conflict</a></li>
+    </div>
+  </div>
+
+  <div class="container shadow p-5 mb-5 bg-white rounded">
+    <h3>Reconstruct speech style from GT style tokens<a id="reconstruct" /></h3>
+
+    <p style="margin-top: 2em">
+      In this section, we provide some results of reconstructing speech from ground truth style tokens, as well as ground truth speech, compressed speech from codec, and zero-shot TTS results. You may need to scroll right to see full results.
+    </p>
+    <div class="container pt-3 table-responsive">
+      <table class="table table-hover" id="gender_table_1">
+        <thead>
+          <tr>
+            <th style="text-align: center">Transcript</th>
+            <th style="text-align: center">Ground Truth</th>
+            <th style="text-align: center">GT. + codec</th>
+            <th style="text-align: center">Acoustic LM + GT. style tokens</th>
+            <th style="text-align: center">YourTTS</th>
+            <th style="text-align: center">XTTS-V2</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+          <td style="text-align: center" colspan="6"><b>LibriTTS</b></td>
+          </tr>
+          <tr>
+            <td style="text-align: left">The lower of the three is Gilchrist, a fine scholar and athlete, plays in the Rugby team and the cricket team for the college, and got his Blue for the hurdles and the long jump.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_1580_141083_000081_000001_gt.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_1580_141083_000081_000001_codec.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_1580_141083_000081_000001_reconstruct.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_1580_141083_000081_000001_yourtts.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_1580_141083_000081_000001_xttsv2.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: left">Nothing happened, however, to interfere with the successful running of the station, and for twenty years thereafter the same two dynamos continued to furnish light in Sunbury.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_2300_131720_000018_000001_gt.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_2300_131720_000018_000001_codec.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_2300_131720_000018_000001_reconstruct.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_2300_131720_000018_000001_yourtts.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_2300_131720_000018_000001_xttsv2.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: left">In the palace yard stood two soldiers with shining helmets, and with muskets over their shoulders; and when Anders came, both the muskets were levelled at him.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_7021_85628_000015_000001_gt.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_7021_85628_000015_000001_codec.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_7021_85628_000015_000001_reconstruct.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_7021_85628_000015_000001_yourtts.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/libritts_7021_85628_000015_000001_xttsv2.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+          <td style="text-align: center" colspan="6"><b>Gigaspeech</b></td>
+          </tr>
+          <tr>
+            <td style="text-align: left">thank you, said alice, feeling very glad that the figure was over.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_AUD0000000468_S0000807_gt.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_AUD0000000468_S0000807_codec.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_AUD0000000468_S0000807_reconstruct.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_AUD0000000468_S0000807_yourtts.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_AUD0000000468_S0000807_xttsv2.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: left">he was here to present from his latest book of photography and text, blind spot,</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_POD0000000432_S0000296_gt.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_POD0000000432_S0000296_codec.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_POD0000000432_S0000296_reconstruct.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_POD0000000432_S0000296_yourtts.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_POD0000000432_S0000296_xttsv2.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: left">but we've got extra information in there to make it a lot easier for keyboard-only users and screen reader users to use.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000299_S0000430_gt.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000299_S0000430_codec.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000299_S0000430_reconstruct.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000299_S0000430_yourtts.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000299_S0000430_xttsv2.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: left">then i add the handlers for managing changes and adding new items on the inputs and outputs,</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000475_S0000021_gt.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000475_S0000021_codec.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000475_S0000021_reconstruct.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000475_S0000021_yourtts.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000475_S0000021_xttsv2.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: left">you can save your ether for reuse although it should be stored over sodium to destroy any contaminants.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000525_S0000112_gt.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000525_S0000112_codec.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000525_S0000112_reconstruct.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000525_S0000112_yourtts.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/gigaspeech_YOU0000000525_S0000112_xttsv2.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: center" colspan="6"><b>DailyTalk</b></td>
+          </tr>
+          <tr>
+            <td style="text-align: left">Is it possible to change to another room?</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/dailytalk_3_0_d307_gt.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/dailytalk_3_0_d307_codec.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/dailytalk_3_0_d307_reconstruct.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/dailytalk_3_0_d307_yourtts.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/dailytalk_3_0_d307_xttsv2.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: left">Yeah? Umm can I take a look at the Sirs you carry?</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/dailytalk_5_1_d997_gt.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/dailytalk_5_1_d997_codec.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/dailytalk_5_1_d997_reconstruct.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/dailytalk_5_1_d997_yourtts.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/reconstruction/dailytalk_5_1_d997_xttsv2.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          
+        </tbody>
+      </table>
+      <p>&nbsp</p>
+
+    </div>
+
+  </div>
+  
+  <div class="container shadow p-5 mb-5 bg-white rounded">
+    <h3>Site under construction.</h3>
+  </div>
+
+</body>
+
+</html>
