@@ -62,7 +62,7 @@
         <li><a href="#reconstruct" class="btn border-white bg-white fw-bold">Reconstruct speech style from GT style tokens</a></li>
         <li><a href="#label-ctrl" class="btn border-white bg-white fw-bold">Controllable TTS with discrete lables</a></li>
         <li><a href="#emb-ctrl" class="btn border-white bg-white fw-bold">Controlling pitch and emotion with a reference speaker</a></li>
-        <li><a href="#bad-cases" class="btn border-white bg-white fw-bold">Bad cases with control signal conflict</a></li>
+        <li><a href="#bad-cases" class="btn border-white bg-white fw-bold">Bad cases</a></li>
     </div>
   </div>
 
@@ -565,8 +565,6 @@
             <td style="text-align: center">7 (no reverberation)</td>
             <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/label_ctrl/6829_68769_000073_000000_c507.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
           </tr>
-
-
           
         </tbody>
       </table>
@@ -575,10 +573,106 @@
 
   </div>
 
+
+  <div class="container shadow p-5 mb-5 bg-white rounded">
+    <h3>Controlling pitch and emotion with a reference speaker<a id="emb-ctrl" /></h3>
+
+    <p style="margin-top: 2em">
+      In this section, we provide results of combining discrete labels and speaker embeddings. We change emotion labels in the ground truth label combinations, and use the pitch MLP predictors on some samples for avoiding the conflict between control signals.
+    </p>
+    <p><b>CFG=3</b></p>
+    <div class="container pt-3 table-responsive">
+      <table class="table table-hover" id="gender_table_1">
+        <thead>
+          <tr>
+            <th style="text-align: center">Transcript</th>
+            <th style="text-align: center">Speaker Reference Audio</th>
+            <th style="text-align: center">Emotion Labels</th>
+            <th style="text-align: center">Result</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td rowspan="4" style="text-align: left">The lately roaring winds are hushed into a dead calm; nature seems to breathe no more, and to be sinking into the stillness of death.</td>
+            <td rowspan="4" style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/260_123288_000013_000001_ref.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center">A=2, V=3, D=3 (Negative)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/260_123288_000013_000001_a_2_v_3_d_3.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          <tr>
+            <td style="text-align: center">A=4, V=3, D=5 (Normal)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/260_123288_000013_000001_a_4_v_3_d_5.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: center">A=5, V=7, D=6 (Joyful)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/260_123288_000013_000001_a_5_v_7_d_6.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: center">A=6, V=2, D=7 (Angry)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/260_123288_000013_000001_a_6_v_2_d_7.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+
+          <tr>
+            <td rowspan="4" style="text-align: left">The infamy of this bargain had such an influence on the Scottish parliament, that they once voted that the king should be protected, and his liberty insisted on.</td>
+            <td rowspan="4" style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/8224_274384_000030_000000_ref.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center">A=2, V=2, D=3 (Depressed)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/8224_274384_000030_000000_a_2_v_2_d_3.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          <tr>
+            <td style="text-align: center">A=4, V=3, D=5 (Normal)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/8224_274384_000030_000000_a_4_v_3_d_5.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: center">A=5, V=7, D=6 (Delighted)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/8224_274384_000030_000000_a_5_v_7_d_6.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: center">A=6, V=2, D=7 (Angry)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/8224_274384_000030_000000_a_6_v_2_d_7.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+
+          <tr>
+            <td rowspan="4" style="text-align: left">MILLIMETER Roughly one twenty fifth of an inch</td>
+            <td rowspan="4" style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/8463_294825_000047_000000_ref.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center">A=2, V=3, D=3 (Negative)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/8463_294825_000047_000000_a_2_v_3_d_3.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          <tr>
+            <td style="text-align: center">A=4, V=5, D=5 (Normal)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/8463_294825_000047_000000_a_4_v_5_d_5.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: center">A=5, V=2, D=6 (Offended)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/8463_294825_000047_000000_a_5_v_2_d_6.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: center">A=5, V=7, D=6 (Delighted)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/8463_294825_000047_000000_a_5_v_7_d_6.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+
+          <tr>
+            <td rowspan="3" style="text-align: left">Good gracious, mr Holmes, you are surely not going to leave me in this abrupt fashion! You don't seem to realize the position.</td>
+            <td rowspan="3" style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/1580_141084_000015_000001_ref.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: center">A=3, V=4, D=4 (Bored)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/1580_141084_000015_000001_a_3_v_4_d_4.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          <tr>
+            <td style="text-align: center">A=5, V=4, D=6 (Normal)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/1580_141084_000015_000001_a_5_v_4_d_6.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          <tr>
+            <td style="text-align: center">A=6, V=4, D=7 (Emotional)</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/emb_ctrl/1580_141084_000015_000001_a_6_v_4_d_7.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+          </tr>
+          
+        </tbody>
+      </table>
+      <p>&nbsp</p>
+
+    </div>
+
+  </div>
   
   
   <div class="container shadow p-5 mb-5 bg-white rounded">
-    <h3>Site under construction.</h3>
+    <h3>Bad cases<a id="bad-cases" /></h3>
+    <p>&nbsp</p>
+    <h4>Content to be added.</h4>
   </div>
 
 </body>
