@@ -61,7 +61,7 @@
     <div>
         <li><a href="#reconstruct" class="btn border-white bg-white fw-bold">Reconstruct speech style from GT style tokens</a></li>
         <li><a href="#label-ctrl" class="btn border-white bg-white fw-bold">Controllable TTS with discrete lables</a></li>
-        <li><a href="#emb-ctrl" class="btn border-white bg-white fw-bold">Controlling pitch and emotion with a reference speaker</a></li>
+        <li><a href="#emb-ctrl" class="btn border-white bg-white fw-bold">Controlling emotion with a reference speaker</a></li>
         <li><a href="#bad-cases" class="btn border-white bg-white fw-bold">Bad cases</a></li>
     </div>
   </div>
@@ -575,7 +575,7 @@
 
 
   <div class="container shadow p-5 mb-5 bg-white rounded">
-    <h3>Controlling pitch and emotion with a reference speaker<a id="emb-ctrl" /></h3>
+    <h3>Controlling emotion with a reference speaker<a id="emb-ctrl" /></h3>
 
     <p style="margin-top: 2em">
       In this section, we provide results of combining discrete labels and speaker embeddings. We change emotion labels in the ground truth label combinations, and use the pitch MLP predictors on some samples for avoiding the conflict between control signals.
