@@ -671,8 +671,67 @@
   
   <div class="container shadow p-5 mb-5 bg-white rounded">
     <h3>Bad cases<a id="bad-cases" /></h3>
-    <p>&nbsp</p>
-    <h4>Content to be added.</h4>
+    <p style="margin-top: 2em">
+      In this section, we provide some samples with bad qualitys or unsuccessful control, and provide our analysis for the reasons.
+    </p>
+    <div class="container pt-3 table-responsive">
+      <table class="table table-hover" id="gender_table_1">
+        <thead>
+          <tr>
+            <th style="text-align: center">Transcript</th>
+            <th style="text-align: center">Result</th>
+            <th style="text-align: center">Analysis</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="text-align: left">Yes, call me by my pet name! let me hear The name I used to run at, when a child, From innocent play, and leave the cowslips plied, To glance up in some face that proved me dear With the look of its eyes.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/bad_cases/908_31957_000007_000000.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: left">Control signal conflicts (gender=female, pitch mean=1 (very low)). The timbre sounds masculine, which means the gender label doesn't work, and there are errors in the content.</td>
+          <tr>
+          <tr>
+            <td style="text-align: left">There were some really curious pieces of mediaeval domestic architecture.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/bad_cases/1580_141084_000009_000002.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: left">Control signal conflicts (gender=male, pitch mean=6 (high)). The timbre is low, which means the pitch mean label doesn't work.</td>
+          <tr>
+
+          <tr>
+            <td style="text-align: left">MILLIMETER Roughly one twenty fifth of an inch.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/bad_cases/8463_294825_000047_000000_pitch7.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: left">Control signal conflicts (age=6 (old), pitch mean=7 (very high)). The timbre is high and sounds like a young girl, which means the age label doesn't work.</td>
+          <tr>
+
+            <tr>
+              <td style="text-align: left">Every strong impression which you make upon his perceptive powers must have a very lasting influence, and even the impression itself may, in some cases, be forever indelible.</td>
+              <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/bad_cases/7021_79759_000009_000003_a_4_v_3_d_7.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+              <td style="text-align: left">Control signal conflicts (A=4, D=7). The speech is supposed to be relative calm emotion with arousal=4, yet the result turns out to have strong emotion. This may due to the strong correlation between arousal and dominance modeled by the emotion labeling tool.</td>
+            <tr>
+
+          <tr>
+            <td style="text-align: left">Two hours afterwards a terrible shock awoke me.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/bad_cases/260_123286_000038_000000_snr0.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: left">Extreme labels with very little presence in the training data (SNR = 0, indicating extremely high noise) fail to produce clear and meaningful speech.</td>
+          <tr>
+          
+          <tr>
+            <td style="text-align: left">A transferable ticket to the Haul of Fame.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/bad_cases/121_121726_000025_000000_a_8_v_8_d_9.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: left">Extreme label combinations with very little presence in the training data (A=8, V=8, D=9, indicating extremely emotional speech) lead to very unnatural speech.</td>
+          <tr>
+
+          <tr>
+            <td style="text-align: left">But let us turn more particularly to the history of the Church itself.</td>
+            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/bad_cases/4077_13754_000010_000000_a_2_v_3_d_3.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
+            <td style="text-align: left">Combining speaker embedding and discrete labels sometimes results in intense background noise and degraded content accuracy with a non-negligible probability, often happens on extreme label combinations.</td>
+          <tr>
+
+            
+
+        </tbody>
+      </table>
+      <p>&nbsp</p>
+
+    </div>
   </div>
 
 </body>
