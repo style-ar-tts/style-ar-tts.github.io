@@ -59,7 +59,7 @@
   <div class="container pt-5 mt-5 shadow p-5 mb-5 bg-white rounded">
     <h2 id="tablecontents" style="text-align: left;">Table of Contents</h2>
     <div>
-        <li><a href="#reconstruct" class="btn border-white bg-white fw-bold">Reconstruct speech style from GT style tokens</a></li>
+        <li><a href="#reconstruct" class="btn border-white bg-white fw-bold">Reconstruct speech style from GT style-rich tokens</a></li>
         <li><a href="#label-ctrl" class="btn border-white bg-white fw-bold">Controllable TTS with discrete lables</a></li>
         <li><a href="#emb-ctrl" class="btn border-white bg-white fw-bold">Controlling emotion with a reference speaker</a></li>
         <li><a href="#bad-cases" class="btn border-white bg-white fw-bold">Bad cases</a></li>
@@ -67,10 +67,10 @@
   </div>
 
   <div class="container shadow p-5 mb-5 bg-white rounded">
-    <h3>Reconstruct speech style from GT style tokens<a id="reconstruct" /></h3>
+    <h3>Reconstruct speech style from GT style-rich tokens<a id="reconstruct" /></h3>
 
     <p style="margin-top: 2em">
-      In this section, we provide some results of reconstructing speech from ground truth style tokens, as well as ground truth speech, compressed speech from codec, and zero-shot TTS results. You may need to scroll right to see full results.
+      In this section, we provide some results of reconstructing speech from ground truth style-rich tokens, as well as ground truth speech, compressed speech from codec, and zero-shot TTS results. You may need to scroll right to see full results.
     </p>
     <div class="container pt-3 table-responsive">
       <table class="table table-hover" id="gender_table_1">
@@ -79,7 +79,7 @@
             <th style="text-align: center">Transcript</th>
             <th style="text-align: center">Ground Truth</th>
             <th style="text-align: center">GT. + codec</th>
-            <th style="text-align: center">Acoustic LM + GT. style tokens</th>
+            <th style="text-align: center">Acoustic LM + GT. style-rich tokens</th>
             <th style="text-align: center">YourTTS</th>
             <th style="text-align: center">XTTS-V2</th>
           </tr>
@@ -719,11 +719,6 @@
             <td style="text-align: left">Extreme label combinations with very little presence in the training data (A=8, V=8, D=9, indicating extremely emotional speech) lead to very unnatural speech.</td>
           <tr>
 
-          <tr>
-            <td style="text-align: left">But let us turn more particularly to the history of the Church itself.</td>
-            <td style="text-align: center"><audio controls controlslist="nodownload" class="px-1"> <source src='data/bad_cases/4077_13754_000010_000000_a_2_v_3_d_3.wav' type="audio/wav">Your browser does not support the audio element.</audio></td>
-            <td style="text-align: left">Combining speaker embedding and discrete labels sometimes results in intense background noise and degraded content accuracy with a non-negligible probability, often happens on extreme label combinations.</td>
-          <tr>
 
             
 
